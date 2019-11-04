@@ -17,6 +17,7 @@ const twilio = Twilio(
 
 const TWILIO_COST_PER_TEXT = 0.0075
 const AIRTABLE_BASE_SUFFIX = process.env.AIRTABLE_BASE_SUFFIX
+const PORT = 4000
 
 const authenticate = token => {
   const tokens = process.env.APP_AUTH_TOKEN.split(',')
@@ -204,6 +205,6 @@ app.post('/v1/notification', (req, res) => {
   }
 })
 
-const listener = app.listen(process.env.PORT, function() {
+const listener = app.listen(PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port)
 })
