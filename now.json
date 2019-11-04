@@ -1,4 +1,21 @@
 {
   "version": 2,
-  "builds": [{ "src": "server.js", "use": "@now/node-server" }]
+  "builds": [{ "src": "index.js", "use": "@now/node-server" }],
+  "routes": [
+    {
+      "src": "/",
+      "dest": "/index.js",
+      "methods": ["GET"]
+    },
+    {
+      "src": "/mystery",
+      "dest": "/index.js",
+      "methods": ["GET"]
+    },
+    {
+      "src": "/v1/notification",
+      "dest": "/index.js",
+      "methods": ["GET", "POST"]
+    }
+  ]
 }

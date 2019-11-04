@@ -2,9 +2,9 @@
   "name": "***REMOVED***-api",
   "version": "0.0.1",
   "description": "API for ***REMOVED*** Hack Club",
-  "main": "server.js",
+  "main": "index.js",
   "scripts": {
-    "start": "node server.js"
+    "start": "node index.js"
   },
   "dependencies": {
     "express": "^4.16.4",
