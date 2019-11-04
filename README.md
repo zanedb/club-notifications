@@ -1,12 +1,11 @@
-***REMOVED*** Hack Club API
-=================
+# ***REMOVED*** Hack Club API
 
 Our API for [***REMOVED*** Hack Club](https://***REMOVED***/rahs). Currently used for sending notifications.
 
-Setup
-------------
+## Setup
 
 1. Create an `.env` file, using the below template.
+
 ```
 # Find these at https://airtable.com/api
 AIRTABLE_BASE=
@@ -20,15 +19,17 @@ TWILIO_AUTH_TOKEN=
 # Create a messaging service at https://www.twilio.com/console/sms/services
 TWILIO_MESSAGING_SERVICE_SID=
 # Note that you can have multiple (comma-separated) tokens
-AUTH_TOKEN=
+APP_AUTH_TOKEN=
 ```
 
 2. Install dependencies.
+
 ```
 yarn
 ```
 
 3. Start the server.
+
 ```
 node server.js
 ```
