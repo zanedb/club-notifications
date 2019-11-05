@@ -1,6 +1,6 @@
 # ***REMOVED*** Hack Club API
 
-Our API for [***REMOVED*** Hack Club](https://***REMOVED***/rahs). Currently used for sending SMS & email notifications.
+Our API for [***REMOVED*** Hack Club](https://***REMOVED***/rahs). Currently used for sending notifications.
 
 ## Setup
 
@@ -20,6 +20,10 @@ TWILIO_AUTH_TOKEN=
 TWILIO_MESSAGING_SERVICE_SID=
 # Create one at https://app.sendgrid.com/settings/api_keys
 SENDGRID_API_KEY=
+# Create one at https://sendgrid.com/dynamic_templates
+SENDGRID_TEMPLATE_ID=
+# Make sure to authenticate with SendGrid beforehand!
+SENDGRID_FROM_EMAIL=
 # Note that you can have multiple (comma-separated) tokens
 APP_AUTH_TOKEN=
 ```
