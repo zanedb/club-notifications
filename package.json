@@ -11,7 +11,8 @@
     "airtable": "^0.7.2",
     "twilio": "^4.6.0",
     "dotenv": "^8.2.0",
-    "validator": "^12.0.0"
+    "validator": "^12.0.0",
+    "@sendgrid/mail": "^6.4.0"
   },
   "engines": {
     "node": "8.x"
