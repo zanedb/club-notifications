@@ -1,6 +1,6 @@
 # ***REMOVED*** Hack Club API
 
-Our API for [***REMOVED*** Hack Club](https://***REMOVED***/rahs). Currently used for sending notifications.
+Our API for [***REMOVED*** Hack Club](https://***REMOVED***/rahs). Currently used for sending SMS & email notifications.
 
 ## Setup
 
@@ -18,6 +18,8 @@ TWILIO_ACCOUNT_SID=
 TWILIO_AUTH_TOKEN=
 # Create a messaging service at https://www.twilio.com/console/sms/services
 TWILIO_MESSAGING_SERVICE_SID=
+# Create one at https://app.sendgrid.com/settings/api_keys
+SENDGRID_API_KEY=
 # Note that you can have multiple (comma-separated) tokens
 APP_AUTH_TOKEN=
 ```
@@ -33,3 +35,4 @@ yarn
 ```
 node server.js
 ```
+
