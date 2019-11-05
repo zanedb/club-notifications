@@ -36,7 +36,7 @@ const getApproxCost = students =>
 app.get('/', (req, res) => {
   res.json({
     status: 200,
-    message: 'hi there fren',
+    message: 'hi there!',
     url: '/mystery'
   })
 })
@@ -166,8 +166,8 @@ app.post('/v1/notification', (req, res) => {
                 if ((!validator.isEmpty(student.email)) && sendEmail) {
                   const msg = {
                     to: student.email,
-                    from: 'team@***REMOVED***.com',
-                    templateId: 'd-97bf6bcc920145e7a88262f55c3df32d',
+                    from: process.env.SENDGRID_FROM_EMAIL,
+                    templateId: process.env.SENDGRID_TEMPLATE_ID,
                     dynamic_template_data: { subject, message }
                   };
                   sgMail.send(msg);
@@ -213,3 +213,4 @@ app.post('/v1/notification', (req, res) => {
 const listener = app.listen(PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port)
 })
+
