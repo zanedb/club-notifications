@@ -4,6 +4,7 @@ const validator = require('validator')
 const express = require('express')
 const Airtable = require('airtable')
 const Twilio = require('twilio')
+const sgMail = require('@sendgrid/mail')
 
 const app = express()
 app.use(express.json())
@@ -14,6 +15,7 @@ const twilio = Twilio(
   process.env.TWILIO_ACCOUNT_SID,
   process.env.TWILIO_AUTH_TOKEN
 )
+sgMail.setApiKey(process.env.SENDGRID_API_KEY)
 
 const TWILIO_COST_PER_TEXT = 0.0075
 const AIRTABLE_BASE_SUFFIX = process.env.AIRTABLE_BASE_SUFFIX
@@ -48,8 +50,12 @@ app.get('/mystery', (req, res) => {
 
 app.use('/v1/*', (req, res, next) => {
   // only allow authenticated users to access API
-  if (authenticate(req.body.authToken)) {
-    next()
+  if (req.get('Authorization')) {
+    if (authenticate(req.get('Authorization').split(' ')[1])) {
+     next() 
+    } else {
+      res.status(401).json({ error: 'permission denied' })
+    }
   } else {
     res.status(401).json({ error: 'authorization required' })
   }
@@ -105,19 +111,15 @@ app.get('/v1/notification', (req, res) => {
 app.post('/v1/notification', (req, res) => {
   const subject = req.body.subject
   const message = req.body.message
-
+  
   const errors = []
+
+  let sendEmail = subject ? true : false
 
   if (!message) {
     errors.push({
       status: 400,
       message: 'missing parameter: message'
-    })
-  }
-  if (!subject) {
-    errors.push({
-      status: 400,
-      message: 'missing parameter: subject'
     })
   }
 
@@ -161,11 +163,14 @@ app.post('/v1/notification', (req, res) => {
                     body: message
                   })
                 }
-                if (!validator.isEmpty(student.email)) {
-                  // TODO: send email
-                  console.log(
-                    `== EMAIL WOULD BE SENT ==\nFrom: noreply@***REMOVED***.com\nTo: ${student.email}\nSubject: ${subject}\nMessage: ${message}\n== END OF EMAIL ==`
-                  )
+                if ((!validator.isEmpty(student.email)) && sendEmail) {
+                  const msg = {
+                    to: student.email,
+                    from: 'team@***REMOVED***.com',
+                    templateId: 'd-97bf6bcc920145e7a88262f55c3df32d',
+                    dynamic_template_data: { subject, message }
+                  };
+                  sgMail.send(msg);
                 }
                 return
               })
