@@ -27,7 +27,7 @@ const authenticate = token => {
 }
 
 const base = name =>
-  airtableBase(`${name} ${AIRTABLE_BASE_SUFFIX ? AIRTABLE_BASE_SUFFIX : ''}`)
+  airtableBase(`${name}${AIRTABLE_BASE_SUFFIX ? ` ${AIRTABLE_BASE_SUFFIX}` : ''}`)
 
 const getApproxCost = students =>
   students.filter(student => !validator.isEmpty(student.phone)).length *
