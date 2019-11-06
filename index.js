@@ -45,19 +45,19 @@ app.get('/mystery', (req, res) => {
 app.use('/v1/*', (req, res, next) => {
   // only allow authenticated users to access API
   if (req.get('Authorization')) {
+    // for Bearer token authorization, extract the token
     if (authenticate(req.get('Authorization').split(' ')[1])) {
-     next() 
+      next()
     } else {
-      res.status(401).json({ error: 'permission denied' })
+      res.status(401).json({ status: 401, error: 'permission denied' })
     }
   } else {
-    res.status(401).json({ error: 'authorization required' })
+    res.status(401).json({ status: 401, error: 'authorization required' })
   }
 })
 
 // get estimation of notification cost & quantity
 app.get('/v1/notification', (req, res) => {
-  const errors = []
   const students = []
 
   base('Students')
@@ -87,38 +87,35 @@ app.get('/v1/notification', (req, res) => {
       },
       function done(err) {
         if (err) {
-          errors.push({ status: 500, error: err.toString() })
+          res.status(500).json({ status: 500, error: err.toString() })
         } else {
           const approxCost = getApproxCost(students)
-          return res.json({ messagesToSend: students.length, approxCost })
+          const textsToSend = getNumberOfTexts(students)
+
+          return res.json({
+            messagesToSend: students.length,
+            emailsToSend: students.length - textsToSend,
+            textsToSend,
+            approxCost
+          })
         }
       }
     )
-  if (errors.length > 0) {
-    return res.status(500).json({
-      errors: errors
-    })
-  }
 })
 
 // send notifications
 app.post('/v1/notification', (req, res) => {
   const subject = req.body.subject
   const message = req.body.message
-  
   const errors = []
 
+  // only send emails if user writes subject field
   let sendEmail = subject ? true : false
 
-  if (!message) {
-    errors.push({
-      status: 400,
-      message: 'missing parameter: message'
-    })
-  }
-
-  if (message && subject) {
+  if (message) {
     const students = []
+
+    // TODO: extract into 'get students' function
     base('Students')
       .select({
         view: 'Grid view'
@@ -126,6 +123,7 @@ app.post('/v1/notification', (req, res) => {
       .eachPage(
         function page(records, fetchNextPage) {
           records.forEach(function(record) {
+            // only send messages to students with 'Notifications' field enabled
             if (record.get('Notifications') === 'Enabled') {
               const contactInfo = record.get('Contact info')
               const student = {
@@ -153,36 +151,36 @@ app.post('/v1/notification', (req, res) => {
                 if (!validator.isEmpty(student.phone)) {
                   twilio.messages.create({
                     to: student.phone,
-                    from: process.env.TWILIO_MESSAGING_SERVICE_SID,
+                    from: TWILIO_MESSAGING_SERVICE_SID,
                     body: message
                   })
                 }
-                if ((!validator.isEmpty(student.email)) && sendEmail) {
+                if (sendEmail && !validator.isEmpty(student.email)) {
                   const msg = {
                     to: student.email,
-                    from: process.env.SENDGRID_FROM_EMAIL,
-                    templateId: process.env.SENDGRID_TEMPLATE_ID,
+                    from: SENDGRID_FROM_EMAIL,
+                    templateId: SENDGRID_TEMPLATE_ID,
                     dynamic_template_data: { subject, message }
-                  };
-                  sgMail.send(msg);
+                  }
+                  sgMail.send(msg)
                 }
                 return
               })
             )
-              .then(messages => {
+              .then(() => {
                 const approxCost = getApproxCost(students)
                 base('Announcements').create(
                   [
                     {
                       fields: {
                         Message: message,
-                        Subject: subject,
+                        Subject: sendEmail ? subject : '',
                         'Messages sent': students.length,
                         Cost: approxCost
                       }
                     }
                   ],
-                  function(err, records) {
+                  function(err) {
                     if (err)
                       errors.push({ status: 500, message: err.toString() })
                     return
@@ -196,6 +194,11 @@ app.post('/v1/notification', (req, res) => {
           }
         }
       )
+  } else {
+    errors.push({
+      status: 400,
+      message: 'missing parameter: message'
+    })
   }
   if (errors.length > 0) {
     return res.status(500).json({
@@ -223,4 +226,3 @@ const getNumberOfTexts = students =>
 const listener = app.listen(PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port)
 })
-
