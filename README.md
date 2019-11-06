@@ -22,7 +22,8 @@ TWILIO_MESSAGING_SERVICE_SID=
 SENDGRID_API_KEY=
 # Create one at https://sendgrid.com/dynamic_templates
 SENDGRID_TEMPLATE_ID=
-# Make sure to authenticate with SendGrid beforehand!
+# You can also put "Name <email@domain.com>" to include a from name
+# Make sure to authenticate your domain with SendGrid beforehand!
 SENDGRID_FROM_EMAIL=
 # Note that you can have multiple (comma-separated) tokens
 APP_AUTH_TOKEN=
@@ -39,4 +40,3 @@ yarn
 ```
 node server.js
 ```
-
