@@ -96,7 +96,8 @@ app.get('/v1/notification', (req, res) => {
             messagesToSend: students.length,
             emailsToSend: students.length - textsToSend,
             textsToSend,
-            approxCost
+            approxCost,
+            airtableBaseSuffix: AIRTABLE_BASE_SUFFIX ? AIRTABLE_BASE_SUFFIX : ''
           })
         }
       }
