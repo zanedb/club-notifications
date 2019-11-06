@@ -1,37 +1,31 @@
 require('dotenv').config()
 
-const validator = require('validator')
-const express = require('express')
 const Airtable = require('airtable')
-const Twilio = require('twilio')
+const express = require('express')
 const sgMail = require('@sendgrid/mail')
+const Twilio = require('twilio')
+const validator = require('validator')
 
-const app = express()
-app.use(express.json())
-const airtableBase = new Airtable(process.env.AIRTABLE_API_KEY).base(
-  process.env.AIRTABLE_BASE
-)
-const twilio = Twilio(
-  process.env.TWILIO_ACCOUNT_SID,
-  process.env.TWILIO_AUTH_TOKEN
-)
-sgMail.setApiKey(process.env.SENDGRID_API_KEY)
+const {
+  AIRTABLE_BASE,
+  AIRTABLE_API_KEY,
+  TWILIO_ACCOUNT_SID,
+  TWILIO_AUTH_TOKEN,
+  SENDGRID_API_KEY,
+  TWILIO_MESSAGING_SERVICE_SID,
+  SENDGRID_FROM_EMAIL,
+  SENDGRID_TEMPLATE_ID,
+  APP_AUTH_TOKEN,
+  AIRTABLE_BASE_SUFFIX
+} = process.env
 
 const TWILIO_COST_PER_TEXT = 0.0075
-const AIRTABLE_BASE_SUFFIX = process.env.AIRTABLE_BASE_SUFFIX
 const PORT = 4000
 
-const authenticate = token => {
-  const tokens = process.env.APP_AUTH_TOKEN.split(',')
-  return tokens.includes(token)
-}
-
-const base = name =>
-  airtableBase(`${name}${AIRTABLE_BASE_SUFFIX ? ` ${AIRTABLE_BASE_SUFFIX}` : ''}`)
-
-const getApproxCost = students =>
-  students.filter(student => !validator.isEmpty(student.phone)).length *
-  TWILIO_COST_PER_TEXT
+const app = express().use(express.json())
+const airtableBase = new Airtable(AIRTABLE_API_KEY).base(AIRTABLE_BASE)
+const twilio = Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
+sgMail.setApiKey(SENDGRID_API_KEY)
 
 app.get('/', (req, res) => {
   res.json({
@@ -209,6 +203,22 @@ app.post('/v1/notification', (req, res) => {
     })
   }
 })
+
+const authenticate = token => {
+  const tokens = APP_AUTH_TOKEN.split(',')
+  return tokens.includes(token)
+}
+
+const base = name =>
+  airtableBase(
+    `${name}${AIRTABLE_BASE_SUFFIX ? ` ${AIRTABLE_BASE_SUFFIX}` : ''}`
+  )
+
+const getApproxCost = students =>
+  getNumberOfTexts(students) * TWILIO_COST_PER_TEXT
+
+const getNumberOfTexts = students =>
+  students.filter(student => !validator.isEmpty(student.phone)).length
 
 const listener = app.listen(PORT, function() {
   console.log('Your app is listening on port ' + listener.address().port)
