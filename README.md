@@ -38,5 +38,5 @@ yarn
 3. Start the server.
 
 ```
-node server.js
+node index.js
 ```
