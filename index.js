@@ -16,7 +16,7 @@ const {
   SENDGRID_FROM_EMAIL,
   SENDGRID_TEMPLATE_ID,
   APP_AUTH_TOKEN,
-  AIRTABLE_BASE_SUFFIX
+  AIRTABLE_BASE_SUFFIX,
 } = process.env
 
 const TWILIO_COST_PER_TEXT = 0.0075
@@ -31,14 +31,14 @@ app.get('/', (req, res) => {
   res.json({
     status: 200,
     message: 'hi there!',
-    url: '/mystery'
+    url: '/mystery',
   })
 })
 
 app.get('/mystery', (req, res) => {
   res.json({
     status: 200,
-    message: 'check back later ;)'
+    message: 'check back later ;)',
   })
 })
 
@@ -62,16 +62,16 @@ app.get('/v1/notification', (req, res) => {
 
   base('Students')
     .select({
-      view: 'Grid view'
+      view: 'Grid view',
     })
     .eachPage(
       function page(records, fetchNextPage) {
-        records.forEach(function(record) {
+        records.forEach(function (record) {
           if (record.get('Notifications') === 'Enabled') {
             const contactInfo = record.get('Contact info')
             const student = {
               firstName: record.get('First name'),
-              lastName: record.get('Last name')
+              lastName: record.get('Last name'),
             }
 
             student.email = validator.isEmail(contactInfo) ? contactInfo : ''
@@ -97,7 +97,9 @@ app.get('/v1/notification', (req, res) => {
             emailsToSend: students.length - textsToSend,
             textsToSend,
             approxCost,
-            airtableBaseSuffix: AIRTABLE_BASE_SUFFIX ? AIRTABLE_BASE_SUFFIX : ''
+            airtableBaseSuffix: AIRTABLE_BASE_SUFFIX
+              ? AIRTABLE_BASE_SUFFIX
+              : '',
           })
         }
       }
@@ -119,17 +121,17 @@ app.post('/v1/notification', (req, res) => {
     // TODO: extract into 'get students' function
     base('Students')
       .select({
-        view: 'Grid view'
+        view: 'Grid view',
       })
       .eachPage(
         function page(records, fetchNextPage) {
-          records.forEach(function(record) {
+          records.forEach(function (record) {
             // only send messages to students with 'Notifications' field enabled
             if (record.get('Notifications') === 'Enabled') {
               const contactInfo = record.get('Contact info')
               const student = {
                 firstName: record.get('First name'),
-                lastName: record.get('Last name')
+                lastName: record.get('Last name'),
               }
 
               student.email = validator.isEmail(contactInfo) ? contactInfo : ''
@@ -148,12 +150,12 @@ app.post('/v1/notification', (req, res) => {
             errors.push({ status: 500, error: err.toString() })
           } else {
             Promise.all(
-              students.map(student => {
+              students.map((student) => {
                 if (!validator.isEmpty(student.phone)) {
                   twilio.messages.create({
                     to: student.phone,
                     from: TWILIO_MESSAGING_SERVICE_SID,
-                    body: message
+                    body: message,
                   })
                 }
                 if (sendEmail && !validator.isEmpty(student.email)) {
@@ -161,7 +163,7 @@ app.post('/v1/notification', (req, res) => {
                     to: student.email,
                     from: SENDGRID_FROM_EMAIL,
                     templateId: SENDGRID_TEMPLATE_ID,
-                    dynamic_template_data: { subject, message }
+                    dynamic_template_data: { subject, message },
                   }
                   sgMail.send(msg)
                 }
@@ -177,11 +179,11 @@ app.post('/v1/notification', (req, res) => {
                         Message: message,
                         Subject: sendEmail ? subject : '',
                         'Messages sent': students.length,
-                        Cost: approxCost
-                      }
-                    }
+                        Cost: approxCost,
+                      },
+                    },
                   ],
-                  function(err) {
+                  function (err) {
                     if (err)
                       errors.push({ status: 500, message: err.toString() })
                     return
@@ -189,7 +191,7 @@ app.post('/v1/notification', (req, res) => {
                 )
                 return res.json({ status: 200, message: 'messages sent!' })
               })
-              .catch(err => {
+              .catch((err) => {
                 errors.push({ status: 500, message: err.toString() })
               })
           }
@@ -198,32 +200,32 @@ app.post('/v1/notification', (req, res) => {
   } else {
     errors.push({
       status: 400,
-      message: 'missing parameter: message'
+      message: 'missing parameter: message',
     })
   }
   if (errors.length > 0) {
     return res.status(500).json({
-      errors: errors
+      errors: errors,
     })
   }
 })
 
-const authenticate = token => {
+const authenticate = (token) => {
   const tokens = APP_AUTH_TOKEN.split(',')
   return tokens.includes(token)
 }
 
-const base = name =>
+const base = (name) =>
   airtableBase(
     `${name}${AIRTABLE_BASE_SUFFIX ? ` ${AIRTABLE_BASE_SUFFIX}` : ''}`
   )
 
-const getApproxCost = students =>
+const getApproxCost = (students) =>
   getNumberOfTexts(students) * TWILIO_COST_PER_TEXT
 
-const getNumberOfTexts = students =>
-  students.filter(student => !validator.isEmpty(student.phone)).length
+const getNumberOfTexts = (students) =>
+  students.filter((student) => !validator.isEmpty(student.phone)).length
 
-const listener = app.listen(PORT, function() {
+const listener = app.listen(PORT, function () {
   console.log('Your app is listening on port ' + listener.address().port)
 })
