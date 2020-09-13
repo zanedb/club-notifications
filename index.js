@@ -25,21 +25,6 @@ const airtableBase = new Airtable(AIRTABLE_API_KEY).base(AIRTABLE_BASE)
 const twilio = Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 sgMail.setApiKey(SENDGRID_API_KEY)
 
-app.get('/', (req, res) => {
-  res.json({
-    status: 200,
-    message: 'hi there!',
-    url: '/mystery',
-  })
-})
-
-app.get('/mystery', (req, res) => {
-  res.json({
-    status: 200,
-    message: 'check back later ;)',
-  })
-})
-
 app.use('/v1/*', (req, res, next) => {
   // only allow authenticated users to access API
   if (req.get('Authorization')) {
