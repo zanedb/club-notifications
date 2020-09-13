@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const Airtable = require('airtable')
 const express = require('express')
 const sgMail = require('@sendgrid/mail')

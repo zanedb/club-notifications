@@ -4,7 +4,7 @@
   "description": "Notifications API for Clubs, sort of an alternative to Remind.",
   "main": "index.js",
   "scripts": {
-    "start": "node index.js"
+    "start": "node -r dotenv/config index.js"
   },
   "dependencies": {
     "express": "^4.16.4",
