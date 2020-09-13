@@ -39,13 +39,13 @@ SENDGRID_FROM_EMAIL=
 APP_AUTH_TOKEN=
 ```
 
-2. Install dependencies.
+3. Install dependencies.
 
 ```
 yarn
 ```
 
-3. Start the server.
+4. Start the server.
 
 ```
 yarn start
