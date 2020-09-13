@@ -1,7 +1,7 @@
 {
-  "name": "***REMOVED***-api",
+  "name": "club-notifications",
   "version": "0.0.1",
-  "description": "API for ***REMOVED*** Hack Club",
+  "description": "Notifications API for Clubs, sort of an alternative to Remind.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js"
@@ -18,7 +18,7 @@
     "node": "8.x"
   },
   "repository": {
-    "url": "https://github.com/zanedb/***REMOVED***-api"
+    "url": "https://github.com/zanedb/club-notifications"
   },
   "license": "MIT"
 }
