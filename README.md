@@ -50,13 +50,15 @@ will return
 }
 ```
 
-## Setup
+## Deployment
 
 1. Make a copy of the [Airtable base template](https://airtable.com/shrMJutlP3wjdHj6y). Feel free to add fields as you wish, but keep the default ones the same.
 
-2. Create an `.env` file, using the below template.
+2. One-click deploy: [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fzanedb%2Fclub-notifications)
 
-```
+3. Set the Vercel environment variables, using the following `.env` file as a guide:
+
+```sh
 # Find these at https://airtable.com/api
 AIRTABLE_BASE_ID=
 AIRTABLE_API_KEY=
@@ -75,20 +77,16 @@ SENDGRID_TEMPLATE_ID=
 # You can also put "Name <email@domain.com>" to include a from name
 # Make sure to authenticate your domain with SendGrid beforehand!
 SENDGRID_FROM_EMAIL=
-# This is the Bearer token you will use to send an authenticated request
+# This is the token you will use to send an authenticated request (see Documentation)
 # Make it a long, secure string and be sure to keep it private
 # Note that you can have multiple (comma-separated) tokens
 APP_AUTH_TOKEN=
 ```
 
-3. Install dependencies.
+- To develop locally:
 
-```
-yarn
-```
-
-4. Start the server.
-
-```
-yarn start
+```sh
+git clone https://github.com/zanedb/club-notifications
+cd club-notifications
+vercel dev
 ```
