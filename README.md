@@ -17,7 +17,8 @@ If you don't want to use Shortcuts, you can absolutely send an HTTP request with
 All requests should supply authentication, either in the form of a Bearer token header (ex. `Authorization: Bearer 123`) or as a query parameter in the URL (ex. `/api/notifications?token=123`). Tokens are currently set with the `APP_AUTH_TOKEN` environment variable on Vercel. Here are all the requests available:
 
 - `GET /api/notifications`
-  A GET request to `/api/notifications` (no body needed) will return
+
+A GET request to `/api/notifications` (no body needed) will return
 
 ```
 {
@@ -30,7 +31,8 @@ All requests should supply authentication, either in the form of a Bearer token 
 ```
 
 - `POST /api/notifications`
-  A POST request to `/api/notifications` with the following body
+
+A POST request to `/api/notifications` with the following body
 
 ```
 {
