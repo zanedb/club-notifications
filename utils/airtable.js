@@ -3,8 +3,6 @@ const validator = require('validator')
 
 const { AIRTABLE_API_KEY, AIRTABLE_BASE_SUFFIX } = process.env
 
-const TWILIO_COST_PER_TEXT = 0.0075
-
 export const getAirtableStudents = async (options) => {
   const { baseId, tableName, select } = options
   const airtable = new Airtable({ AIRTABLE_API_KEY }).base(baseId)(
@@ -45,12 +43,6 @@ export const createAirtableRecord = async (options, apiKey) => {
     })
   })
 }
-
-export const getApproxCost = (students) =>
-  getNumberOfTexts(students) * TWILIO_COST_PER_TEXT
-
-export const getNumberOfTexts = (students) =>
-  students.filter((student) => !validator.isEmpty(student.phone)).length
 
 const table = (tableName) =>
   `${tableName}${AIRTABLE_BASE_SUFFIX ? ` ${AIRTABLE_BASE_SUFFIX}` : ''}`
