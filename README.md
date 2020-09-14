@@ -1,4 +1,4 @@
-# Club Notifications API
+# Club Notifications API [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fzanedb%2Fclub-notifications)
 
 Notifications API for Clubs, sort of an alternative to Remind. It takes an Airtable base, and sends a message via both SMS and email to all students, via Twilio and SendGrid respectively. I built this for & use it at my [Hack Club](https://hackclub.com)!
 
