@@ -1,6 +1,12 @@
 # Club Notifications API [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/git/external?repository-url=https%3A%2F%2Fgithub.com%2Fzanedb%2Fclub-notifications)
 
-Notifications API for Clubs, sort of an alternative to Remind. It takes an Airtable base, and sends a message via both SMS and email to all students, via Twilio and SendGrid respectively. I built this for & use it at my [Hack Club](https://hackclub.com)!
+### What is this?
+
+This is a [Vercel serverless API](https://vercel.com/docs/serverless-functions/introduction) that, by HTTP request, will text and (optionally) email your message to every record in an Airtable base, similar to [Remind](https://www.remind.com)'s notification system. I built this for & use it at my [Hack Club](https://hackclub.com)!
+
+### How does it work?
+
+It uses the [Airtable API](https://airtable.com/api) to fetch all records, processes them, and then uses the [Twilio API](https://www.twilio.com/docs/sms) to send SMS messages and the [SendGrid API](https://sendgrid.com/solutions/email-api/) to email.
 
 ## Usage
 
@@ -20,7 +26,7 @@ All requests should supply authentication, either in the form of a Bearer token 
 
 A GET request to `/api/notifications` (no body needed) will return
 
-```
+```json
 {
   "messagesToSend": 2,
   "emailsToSend": 1,
@@ -34,7 +40,7 @@ A GET request to `/api/notifications` (no body needed) will return
 
 A POST request to `/api/notifications` with the following body
 
-```
+```json
 {
   "message": "This is the SMS that will be sent, and the body of the email if it's sent.",
   "subject": "This field is optional! If included, it will send emails as well with this subject line. If not, just SMS."
@@ -43,7 +49,7 @@ A POST request to `/api/notifications` with the following body
 
 will return
 
-```
+```json
 {
   "status": 200,
   "message": "messages sent!"
