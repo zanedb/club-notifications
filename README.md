@@ -16,7 +16,7 @@ Notifications API for Clubs, sort of an alternative to Remind. It can send to bo
 
 ```
 # Find these at https://airtable.com/api
-AIRTABLE_BASE=
+AIRTABLE_BASE_ID=
 AIRTABLE_API_KEY=
 # Example: if set to 'DEV', will look for Airtable bases called 'Students DEV' and 'Announcements DEV' (note the space!)
 # This is for development purposes, leave blank in production

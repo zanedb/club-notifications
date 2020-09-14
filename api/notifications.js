@@ -16,7 +16,7 @@ const {
 } = require('../utils/helpers.js')
 
 const {
-  AIRTABLE_BASE,
+  AIRTABLE_BASE_ID,
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   SENDGRID_API_KEY,
@@ -30,7 +30,7 @@ const notifications = async (req, res) => {
   // GET /api/notifications
   if (req.method === 'GET') {
     const students = await getAirtableStudents({
-      baseId: AIRTABLE_BASE,
+      baseId: AIRTABLE_BASE_ID,
       tableName: 'Students',
     })
 
@@ -59,7 +59,7 @@ const notifications = async (req, res) => {
     const twilio = Twilio(TWILIO_ACCOUNT_SID, TWILIO_AUTH_TOKEN)
 
     const students = await getAirtableStudents({
-      baseId: AIRTABLE_BASE,
+      baseId: AIRTABLE_BASE_ID,
       tableName: 'Students',
     })
 
@@ -84,7 +84,7 @@ const notifications = async (req, res) => {
 
     const approxCost = getApproxCost(students)
     const record = await createAirtableRecord({
-      baseId: AIRTABLE_BASE,
+      baseId: AIRTABLE_BASE_ID,
       tableName: 'Announcements',
       fields: {
         Message: message,
