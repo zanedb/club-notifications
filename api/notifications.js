@@ -1,23 +1,27 @@
-const Airtable = require('airtable')
 const sgMail = require('@sendgrid/mail')
 const Twilio = require('twilio')
-const { isEmpty } = require('lodash')
 const validator = require('validator')
+
+const { isEmpty } = require('lodash')
+const isPopulated = (obj) => !isEmpty(obj)
+const { authenticate, error } = require('../utils/request.js')
+const {
+  getAirtableStudents,
+  createAirtableRecord,
+  getApproxCost,
+  getNumberOfTexts,
+} = require('../utils/airtable.js')
 
 const {
   AIRTABLE_BASE,
-  AIRTABLE_API_KEY,
   TWILIO_ACCOUNT_SID,
   TWILIO_AUTH_TOKEN,
   SENDGRID_API_KEY,
   TWILIO_MESSAGING_SERVICE_SID,
   SENDGRID_FROM_EMAIL,
   SENDGRID_TEMPLATE_ID,
-  APP_AUTH_TOKEN,
   AIRTABLE_BASE_SUFFIX,
 } = process.env
-
-const TWILIO_COST_PER_TEXT = 0.0075
 
 module.exports = async (req, res) => {
   // only allow authenticated users to access API
@@ -104,73 +108,3 @@ module.exports = async (req, res) => {
     return res.json({ status: 200, message: 'messages sent!' })
   }
 }
-
-/* AIRTABLE UTIL */
-
-const getAirtableStudents = async (options) => {
-  const { baseId, tableName, select } = options
-  const airtable = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(baseId)(
-    table(tableName)
-  )
-  const rawResults = await airtable.select(select).all()
-
-  return await rawResults.reduce((students, record) => {
-    if (record.fields['Notifications'] === 'Enabled') {
-      const contactInfo = record.fields['Contact info']
-      const student = {
-        recordId: record.id,
-        firstName: record.fields['First name'],
-        lastName: record.fields['Last name'],
-      }
-
-      student.email = validator.isEmail(contactInfo) ? contactInfo : ''
-      student.phone = validator.isMobilePhone(contactInfo) ? contactInfo : ''
-
-      students.push(student)
-    }
-    return students
-  }, [])
-}
-
-const createAirtableRecord = async (options) => {
-  const { baseId, tableName, fields } = options
-
-  return new Promise((resolve, reject) => {
-    const airtable = new Airtable({ apiKey: AIRTABLE_API_KEY }).base(baseId)(
-      table(tableName)
-    )
-    airtable.create(fields, (err, records) => {
-      if (err) {
-        reject(err)
-      }
-      resolve(records)
-    })
-  })
-}
-
-const table = (tableName) =>
-  `${tableName}${AIRTABLE_BASE_SUFFIX ? ` ${AIRTABLE_BASE_SUFFIX}` : ''}`
-
-const getApproxCost = (students) =>
-  getNumberOfTexts(students) * TWILIO_COST_PER_TEXT
-
-const getNumberOfTexts = (students) =>
-  students.filter((student) => !validator.isEmpty(student.phone)).length
-
-/* REQUEST UTIL */
-
-const authenticate = (token) => {
-  const tokens = APP_AUTH_TOKEN.split(',')
-  return tokens.includes(token)
-}
-
-const error = (res, status, message) => {
-  res.status(status).json({
-    status,
-    message,
-  })
-}
-
-/* MISC */
-
-const isPopulated = (obj) => !isEmpty(obj)
