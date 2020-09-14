@@ -2,15 +2,18 @@ const sgMail = require('@sendgrid/mail')
 const Twilio = require('twilio')
 const validator = require('validator')
 
-const { isEmpty } = require('lodash')
-const isPopulated = (obj) => !isEmpty(obj)
-const { authenticate, error } = require('../utils/request.js')
+const { authorization } = require('../utils/authorization')
 const {
   getAirtableStudents,
   createAirtableRecord,
+} = require('../utils/airtable.js')
+const {
+  isEmpty,
+  isPopulated,
   getApproxCost,
   getNumberOfTexts,
-} = require('../utils/airtable.js')
+  error,
+} = require('../utils/helpers.js')
 
 const {
   AIRTABLE_BASE,
@@ -23,17 +26,7 @@ const {
   AIRTABLE_BASE_SUFFIX,
 } = process.env
 
-module.exports = async (req, res) => {
-  // only allow authenticated users to access API
-  if (isPopulated(req.headers.authorization)) {
-    // extract Bearer token
-    if (!authenticate(req.headers.authorization.split(' ')[1])) {
-      return error(res, 401, 'permission denied')
-    }
-  } else {
-    return error(res, 401, 'authorization required')
-  }
-
+const notifications = async (req, res) => {
   // GET /api/notifications
   if (req.method === 'GET') {
     const students = await getAirtableStudents({
@@ -108,3 +101,5 @@ module.exports = async (req, res) => {
     return res.json({ status: 200, message: 'messages sent!' })
   }
 }
+
+module.exports = authorization(notifications)
