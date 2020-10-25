@@ -12,7 +12,7 @@ It uses the [Airtable API](https://airtable.com/api) to fetch all records, proce
 
 **To send notifications easily & quickly, I recommend using the iOS Shortcuts app.**
 
-If you have it, **[here's the Shortcut I use to send notifications](https://www.icloud.com/shortcuts/9063f2d7bb9b49148fd1c116144c9aa7)**. Put in your API token (`APP_AUTH_TOKEN` in `.env`) and API URL (wherever you're hosting it) on the import questions and you're good to go!
+If you have it, **[here's the Shortcut I use to send notifications]()**. Put in your API token (`APP_AUTH_TOKEN` in `.env`) and API URL (wherever you're hosting it) on the import questions and you're good to go!
 
 **If you don't want to use Shortcuts**, you can absolutely send an HTTP request with your method of choice.
 
