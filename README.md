@@ -14,6 +14,8 @@ It uses the [Airtable API](https://airtable.com/api) to fetch all records, proce
 
 If you have it, **[here's the Shortcut I use to send notifications](https://www.icloud.com/shortcuts/b572104abcb54806b05bdab1fa13a676)**. Put in your API token (`APP_AUTH_TOKEN` in `.env`) and API URL (wherever you're hosting it) on the import questions and you're good to go!
 
+(Oh, and pro-tip: you can use `[[firstName]]` when writing your message & it'll automatically be replaced with " Name". *Note the space!*)
+
 **If you don't want to use Shortcuts**, you can absolutely send an HTTP request with your method of choice.
 
 **Testing:** set `AIRTABLE_BASE_SUFFIX` in `.env` to `DEV`, and ensure you have an Airtable base called "Students DEV". I recommend testing the Shortcut in this mode before sending any notifications!
