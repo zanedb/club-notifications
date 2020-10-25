@@ -68,9 +68,10 @@ const notifications = async (req, res) => {
         twilio.messages.create({
           to: student.phone,
           from: TWILIO_MESSAGING_SERVICE_SID,
-          body: isPopulated(student.firstName)
-            ? message.replace('[[firstName]]', ` ${student.firstName}`)
-            : message,
+          body: message.replace(
+            '[[firstName]]',
+            isPopulated(student.firstName) ? ` ${student.firstName}` : '',
+          ),
         })
       }
       if (sendEmail && !validator.isEmpty(student.email)) {
@@ -80,9 +81,10 @@ const notifications = async (req, res) => {
           templateId: SENDGRID_TEMPLATE_ID,
           dynamicTemplateData: {
             subject,
-            message: isPopulated(student.firstName)
-              ? message.replace('[[firstName]]', ` ${student.firstName}`)
-              : message,
+            message: message.replace(
+              '[[firstName]]',
+              isPopulated(student.firstName) ? ` ${student.firstName}` : '',
+            ),
           },
         }
         await sgMail.send(msg)
