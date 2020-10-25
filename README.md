@@ -56,6 +56,29 @@ will return
 }
 ```
 
+- `GET /api/students`
+
+A GET request to `/api/students` (no body needed) will return all students in JSON form:
+
+```json
+[
+  {
+    "recordId": "recABCDEFG1234567",
+    "firstName": "Mason",
+    "lastName": "Reese",
+    "email": "student@school.com",
+    "phone": ""
+  },
+  {
+    "recordId": "rec1234567ABCDEFG",
+    "firstName": "Jonathon",
+    "lastName": "Goldstein",
+    "email": "",
+    "phone": "1234567890"
+  }
+]
+```
+
 ## Deployment
 
 1. Make a copy of the [Airtable base template](https://airtable.com/shrMJutlP3wjdHj6y). Feel free to add fields as you wish, but keep the default ones the same.
